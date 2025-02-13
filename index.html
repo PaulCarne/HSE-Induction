@@ -76,30 +76,4 @@
 
         // Detect if the app is running in standalone mode on iOS
         if (isIOS && window.navigator.standalone === false) {
-            document.getElementById('prompt').style.display = 'block';
-            document.getElementById('open-in-chrome').addEventListener('click', function() {
-                window.location.href = 'googlechrome://navigate?url=' + encodeURIComponent(window.location.href);
-            });
-        }
-
-        // Load the IFrame Player API code asynchronously.
-        var tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-        var player;
-        var lastTimeUpdate = 0;
-
-        // This function creates an <iframe> (and YouTube player) after the API code downloads.
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('player', {
-                videoId: 'AaayAuLZkmk', // Updated video ID
-                playerVars: {
-                    'autoplay': 1,
-                    'controls': 0, // Hide controls initially
-                    'mute': 1, // Mute the video to ensure autoplay works
-                    'fs': 1, // Allow fullscreen
-                    'modestbranding': 1, // Remove YouTube logo
-                    'rel': 0 // Disable related videos at the end
-                ▋
+            ▋
