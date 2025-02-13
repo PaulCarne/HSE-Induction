@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -14,7 +14,6 @@
             height: 100vh;
             margin: 0;
             text-align: center;
-            position: relative;
             background: #00B5E2; /* Pantone 306 C background color */
             overflow: hidden;
         }
@@ -90,6 +89,7 @@
 
         var player;
         var lastTimeUpdate = 0;
+        var checkInterval;
 
         // This function creates an <iframe> (and YouTube player) after the API code downloads.
         function onYouTubeIframeAPIReady() {
@@ -120,15 +120,15 @@
         function onPlayerStateChange(event) {
             if (event.data == YT.PlayerState.PLAYING) {
                 document.getElementById('player').classList.add('hide-controls'); // Hide controls
-                setInterval(function() {
-                    var currentTime = player.getCurrentTime();
-                    if (currentTime > lastTimeUpdate + 1) {
-                        player.seekTo(lastTimeUpdate);
-                    } else {
-                        lastTimeUpdate = currentTime;
-                    }
+                clearInterval(checkInterval);
+            } else if (event.data == YT.PlayerState.PAUSED || event.data == YT.PlayerState.BUFFERING) {
+                clearInterval(checkInterval);
+                lastTimeUpdate = player.getCurrentTime();
+                checkInterval = setInterval(function() {
+                    player.seekTo(lastTimeUpdate);
                 }, 1000);
             } else if (event.data == YT.PlayerState.ENDED) {
+                clearInterval(checkInterval);
                 window.location.href = "https://forms.office.com/r/75jdBjwfDw";
             } else {
                 document.getElementById('player').classList.remove('hide-controls'); // Show controls
