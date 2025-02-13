@@ -98,6 +98,9 @@
             });
         }
 
+        // Check if the user is on a mobile device
+        const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+
         // Load the IFrame Player API code asynchronously.
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
@@ -153,7 +156,7 @@
         }
 
         function showRotateMessageIfNeeded() {
-            if (window.orientation === 90 || window.orientation === -90) {
+            if (isMobile && (window.orientation === 90 || window.orientation === -90)) {
                 document.getElementById('rotate-message').style.display = 'flex';
             }
         }
@@ -164,7 +167,7 @@
 
         // Add event listener to display the rotate message on orientation change
         window.addEventListener('orientationchange', function() {
-            if (window.location.href.includes("forms.office.com")) {
+            if (isMobile && window.location.href.includes("forms.office.com")) {
                 if (window.orientation === 90 || window.orientation === -90) {
                     document.getElementById('rotate-message').style.display = 'flex';
                 } else {
@@ -175,7 +178,7 @@
 
         // Initial orientation check when the forms page is loaded
         window.addEventListener('load', function() {
-            if (window.location.href.includes("forms.office.com")) {
+            if (isMobile && window.location.href.includes("forms.office.com")) {
                 if (window.orientation === 90 || window.orientation === -90) {
                     document.getElementById('rotate-message').style.display = 'flex';
                 } else {
@@ -186,3 +189,4 @@
     </script>
 </body>
 </html>
+``` ▋
