@@ -148,8 +148,8 @@
                     }
                 }, 1000);
             } else if (event.data == YT.PlayerState.ENDED) {
-                showRotateMessageIfNeeded();
                 window.location.href = "https://forms.office.com/r/75jdBjwfDw";
+                setTimeout(showRotateMessageIfNeeded, 1000); // Delay to ensure the form page is loaded
             } else {
                 document.getElementById('player').classList.remove('hide-controls'); // Show controls
             }
@@ -189,4 +189,3 @@
     </script>
 </body>
 </html>
-``` ▋
