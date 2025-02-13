@@ -146,6 +146,12 @@
                 }, 1000);
             } else if (event.data == YT.PlayerState.ENDED) {
                 window.location.href = "https://forms.office.com/r/75jdBjwfDw";
+                // Show rotate message when the form page is loaded
+                setTimeout(function() {
+                    if (window.orientation === 90 || window.orientation === -90) {
+                        document.getElementById('rotate-message').style.display = 'flex';
+                    }
+                }, 3000); // Adjust the timeout as needed to ensure the form page has loaded
             } else {
                 document.getElementById('player').classList.remove('hide-controls'); // Show controls
             }
@@ -157,11 +163,17 @@
             if (window.orientation === 90 || window.orientation === -90) {
                 iframe.style.width = '100vw';
                 iframe.style.height = '100vh';
-                document.getElementById('rotate-message').style.display = 'flex';
             } else {
                 iframe.style.width = '100%';
                 iframe.style.height = '56.25vw'; // Maintain 16:9 aspect ratio
-                document.getElementById('rotate-message').style.display = 'none';
+            }
+            // Handle rotate message visibility based on orientation
+            if (window.location.href.includes("forms.office.com")) {
+                if (window.orientation === 90 || window.orientation === -90) {
+                    document.getElementById('rotate-message').style.display = 'flex';
+                } else {
+                    document.getElementById('rotate-message').style.display = 'none';
+                }
             }
         });
 
@@ -171,11 +183,17 @@
             if (window.orientation === 90 || window.orientation === -90) {
                 iframe.style.width = '100vw';
                 iframe.style.height = '100vh';
-                document.getElementById('rotate-message').style.display = 'flex';
             } else {
                 iframe.style.width = '100%';
                 iframe.style.height = '56.25vw'; // Maintain 16:9 aspect ratio
-                document.getElementById('rotate-message').style.display = 'none';
+            }
+            // Handle rotate message visibility on initial load if the form page is already loaded
+            if (window.location.href.includes("forms.office.com")) {
+                if (window.orientation === 90 || window.orientation === -90) {
+                    document.getElementById('rotate-message').style.display = 'flex';
+                } else {
+                    document.getElementById('rotate-message').style.display = 'none';
+                }
             }
         });
     </script>
