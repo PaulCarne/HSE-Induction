@@ -14,7 +14,7 @@
             height: 100vh;
             margin: 0;
             text-align: center;
-            background: #00B5E2; /* Pantone 306 C background color */
+            background: #00B5E2;
             overflow: hidden;
         }
         #background {
@@ -103,8 +103,6 @@
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
         var player;
-        var lastTimeUpdate = 0;
-        var intervalId;
 
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
@@ -130,21 +128,9 @@
         }
 
         function onPlayerStateChange(event) {
-            if (event.data == YT.PlayerState.PLAYING) {
-                intervalId = setInterval(function() {
-                    var currentTime = player.getCurrentTime();
-                    if (currentTime > lastTimeUpdate + 1) {
-                        player.seekTo(lastTimeUpdate);
-                    } else {
-                        lastTimeUpdate = currentTime;
-                    }
-                }, 1000);
-            } else if (event.data == YT.PlayerState.ENDED) {
-                clearInterval(intervalId);
+            if (event.data == YT.PlayerState.ENDED) {
                 window.location.href = "https://forms.office.com/r/75jdBjwfDw";
-                setTimeout(showRotateMessageIfNeeded, 1000); // Delay to ensure the form page is loaded
-            } else {
-                clearInterval(intervalId);
+                setTimeout(showRotateMessageIfNeeded, 1000);
             }
         }
 
