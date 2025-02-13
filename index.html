@@ -128,7 +128,9 @@
         }
 
         function onPlayerStateChange(event) {
-            if (event.data == YT.PlayerState.ENDED) {
+            if (event.data == YT.PlayerState.PLAYING) {
+                // Do nothing when the video is playing
+            } else if (event.data == YT.PlayerState.ENDED) {
                 window.location.href = "https://forms.office.com/r/75jdBjwfDw";
                 setTimeout(showRotateMessageIfNeeded, 1000);
             }
