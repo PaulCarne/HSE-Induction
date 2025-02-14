@@ -43,6 +43,53 @@
             max-width: 100%;
             max-height: 100%;
             border: none;
+            position: relative;
+            z-index: 3;
+        }
+        #overlay-permanent {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            z-index: 4;
+        }
+        #overlay-paused {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            z-index: 5;
+        }
+        #pause-button {
+            padding: 10px 20px;
+            background: red;
+            color: #fff;
+            border: 1px solid black;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 6;
+            font-weight: bold;
+        }
+        #start-button {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px 40px;
+            background: red;
+            color: #fff;
+            border: 1px solid black;
+            border-radius: 5px;
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 7;
+            font-weight: bold;
         }
         #prompt {
             position: absolute;
@@ -58,19 +105,21 @@
             text-decoration: underline;
             cursor: pointer;
         }
-        #rotate-message {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
+        /* Additional CSS to hide YouTube button and overlays */
+        .ytp-chrome-top-buttons,
+        .ytp-chrome-bottom,
+        .ytp-show-cards-title,
+        .ytp-pause-overlay,
+        .ytp-youtube-button {
+            display: none !important;
+        }
+        /* Media query for mobile devices */
+        @media (max-width: 768px) {
+            #pause-button {
+                position: absolute;
+                bottom: 20px;
+                right: 20px;
+            }
         }
     </style>
 </head>
@@ -78,12 +127,13 @@
     <div id="background"></div>
     <div id="content">
         <div id="player"></div>
+        <div id="overlay-permanent"></div>
+        <div id="overlay-paused"></div>
+        <button id="pause-button" onclick="togglePause()">Pause</button>
+        <button id="start-button" onclick="startVideo()">Play Video</button>
         <div id="prompt" style="display: none;">
             <p>For the best experience, please <span id="open-in-chrome">open this page in Google Chrome</span> or add this page to your home screen.</p>
         </div>
-    </div>
-    <div id="rotate-message">
-        <p>Please rotate your device to portrait mode.</p>
     </div>
 
     <script>
@@ -103,6 +153,7 @@
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
         var player;
+        var videoStarted = false;
 
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
@@ -113,7 +164,8 @@
                     'mute': 1,
                     'fs': 1,
                     'modestbranding': 1,
-                    'rel': 0
+                    'rel': 0,
+                    'iv_load_policy': 3 // Disable annotations
                 },
                 events: {
                     'onReady': onPlayerReady,
@@ -123,29 +175,54 @@
         }
 
         function onPlayerReady(event) {
-            event.target.playVideo();
-            player.unMute();
+            if (!isMobile) {
+                event.target.playVideo();
+                player.unMute();
+                videoStarted = true;
+            } else {
+                document.getElementById('start-button').style.display = 'block';
+            }
         }
 
         function onPlayerStateChange(event) {
-            if (event.data == YT.PlayerState.PLAYING) {
-                // Do nothing when the video is playing
-            } else if (event.data == YT.PlayerState.ENDED) {
+            if (event.data == YT.PlayerState.ENDED) {
                 window.location.href = "https://forms.office.com/r/75jdBjwfDw";
-                setTimeout(showRotateMessageIfNeeded, 1000);
+            } else if (event.data == YT.PlayerState.PAUSED && videoStarted) {
+                document.getElementById('overlay-paused').style.display = 'block';
+                document.getElementById('pause-button').innerText = 'Play';
+            } else if (event.data == YT.PlayerState.PLAYING) {
+                document.getElementById('overlay-paused').style.display = 'none';
+                document.getElementById('pause-button').innerText = 'Pause';
+                videoStarted = true;
             }
         }
 
-        function showRotateMessageIfNeeded() {
-            if (isMobile && (window.innerWidth > window.innerHeight)) {
-                document.getElementById('rotate-message').style.display = 'flex';
+        function togglePause() {
+            if (player.getPlayerState() === YT.PlayerState.PLAYING) {
+                player.pauseVideo();
             } else {
-                document.getElementById('rotate-message').style.display = 'none';
+                player.playVideo();
             }
         }
 
-        window.addEventListener('resize', showRotateMessageIfNeeded);
-        window.addEventListener('load', showRotateMessageIfNeeded);
+        function startVideo() {
+            player.playVideo();
+            player.unMute();
+            videoStarted = true;
+            document.getElementById('start-button').style.display = 'none';
+        }
+
+        window.addEventListener('load', function() {
+            if (isMobile) {
+                document.getElementById('overlay-permanent').addEventListener('click', function() {
+                    if (!videoStarted) {
+                        player.playVideo();
+                        player.unMute();
+                        videoStarted = true;
+                    }
+                });
+            }
+        });
     </script>
 </body>
 </html>
