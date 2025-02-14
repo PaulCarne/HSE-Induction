@@ -65,34 +65,20 @@
             background: transparent;
             z-index: 5;
         }
-        #pause-button {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            background: none;
-            color: #fff;
-            border: none;
-            cursor: pointer;
-            z-index: 6;
-            font-weight: bold;
-            font-size: 2em; /* twice the size */
-            text-shadow: 0 0 2px #ff0000; /* red border around the symbols */
-            transform: translate(-50%, -50%);
-        }
+        #pause-button,
         #start-button {
             position: absolute;
-            bottom: 20px;
-            left: 20px;
-            display: none;
             background: none;
             color: #fff;
             border: none;
-            font-size: 2em; /* twice the size */
             cursor: pointer;
-            z-index: 7;
             font-weight: bold;
+            font-size: 2em; /* twice the size */
             text-shadow: 0 0 2px #ff0000; /* red border around the symbols */
-            transform: translate(-50%, -50%);
+            z-index: 6;
+        }
+        #pause-button {
+            display: none;
         }
         #prompt {
             position: absolute;
@@ -115,15 +101,6 @@
         .ytp-pause-overlay,
         .ytp-youtube-button {
             display: none !important;
-        }
-        /* Media query for mobile devices */
-        @media (max-width: 768px) {
-            #pause-button,
-            #start-button {
-                bottom: 10px;
-                left: 10px;
-                font-size: 1.5em; /* adjust size for smaller screens */
-            }
         }
     </style>
 </head>
@@ -185,6 +162,7 @@
             } else {
                 document.getElementById('start-button').style.display = 'block';
             }
+            positionButtons();
         }
 
         function onPlayerStateChange(event) {
@@ -215,6 +193,26 @@
             document.getElementById('start-button').style.display = 'none';
         }
 
+        function positionButtons() {
+            const playerElement = document.getElementById('player');
+            const pauseButton = document.getElementById('pause-button');
+            const startButton = document.getElementById('start-button');
+
+            const playerRect = playerElement.getBoundingClientRect();
+            const buttonSize = pauseButton.getBoundingClientRect().width; // assuming square buttons
+
+            const gap = 20; // distance from the bottom and left sides
+            const left = playerRect.left + gap;
+            const bottom = window.innerHeight - playerRect.bottom + gap;
+
+            pauseButton.style.left = `${left}px`;
+            pauseButton.style.bottom = `${bottom}px`;
+
+            startButton.style.left = `${left}px`;
+            startButton.style.bottom = `${bottom}px`;
+        }
+
+        window.addEventListener('resize', positionButtons);
         window.addEventListener('load', function() {
             if (isMobile) {
                 document.getElementById('overlay-permanent').addEventListener('click', function() {
@@ -225,6 +223,7 @@
                     }
                 });
             }
+            positionButtons();
         });
     </script>
 </body>
