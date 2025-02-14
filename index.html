@@ -14,7 +14,7 @@
             height: 100vh;
             margin: 0;
             text-align: center;
-            background: #00B5E2;
+            background: #000000;
             overflow: hidden;
         }
         #background {
@@ -132,7 +132,6 @@
         <button id="pause-button" onclick="togglePause()">Pause</button>
         <button id="start-button" onclick="startVideo()">Play Video</button>
         <div id="prompt" style="display: none;">
-            <p>For the best experience, please <span id="open-in-chrome">open this page in Google Chrome</span> or add this page to your home screen.</p>
         </div>
     </div>
 
@@ -157,7 +156,7 @@
 
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
-                videoId: 'AaayAuLZkmk',
+                videoId: 'AaayAuLZkmk', // Your video ID
                 playerVars: {
                     'autoplay': 1,
                     'controls': 0,
