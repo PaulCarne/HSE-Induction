@@ -77,9 +77,6 @@
             text-shadow: 0 0 2px #ff0000; /* red border around the symbols */
             z-index: 6;
         }
-        #pause-button {
-            display: none;
-        }
         #prompt {
             position: absolute;
             bottom: 10px;
@@ -174,6 +171,7 @@
             } else if (event.data == YT.PlayerState.PLAYING) {
                 document.getElementById('overlay-paused').style.display = 'none';
                 document.getElementById('pause-button').innerText = '⏸️';
+                document.getElementById('pause-button').style.display = 'block';
                 videoStarted = true;
             }
         }
@@ -181,8 +179,10 @@
         function togglePause() {
             if (player.getPlayerState() === YT.PlayerState.PLAYING) {
                 player.pauseVideo();
+                document.getElementById('pause-button').innerText = '▶️';
             } else {
                 player.playVideo();
+                document.getElementById('pause-button').innerText = '⏸️';
             }
         }
 
@@ -191,6 +191,7 @@
             player.unMute();
             videoStarted = true;
             document.getElementById('start-button').style.display = 'none';
+            document.getElementById('pause-button').style.display = 'block';
         }
 
         function positionButtons() {
@@ -199,17 +200,13 @@
             const startButton = document.getElementById('start-button');
 
             const playerRect = playerElement.getBoundingClientRect();
-            const buttonSize = pauseButton.getBoundingClientRect().width; // assuming square buttons
-
             const gap = 20; // distance from the bottom and left sides
-            const left = playerRect.left + gap;
-            const bottom = window.innerHeight - playerRect.bottom + gap;
 
-            pauseButton.style.left = `${left}px`;
-            pauseButton.style.bottom = `${bottom}px`;
+            pauseButton.style.left = `${playerRect.left + gap}px`;
+            pauseButton.style.bottom = `${window.innerHeight - playerRect.bottom + gap}px`;
 
-            startButton.style.left = `${left}px`;
-            startButton.style.bottom = `${bottom}px`;
+            startButton.style.left = `${playerRect.left + gap}px`;
+            startButton.style.bottom = `${window.innerHeight - playerRect.bottom + gap}px`;
         }
 
         window.addEventListener('resize', positionButtons);
