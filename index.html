@@ -77,6 +77,9 @@
             text-shadow: 0 0 2px #ff0000; /* red border around the symbols */
             z-index: 6;
         }
+        #start-button {
+            display: none;
+        }
         #prompt {
             position: absolute;
             bottom: 10px;
@@ -156,6 +159,7 @@
                 event.target.playVideo();
                 player.unMute();
                 videoStarted = true;
+                document.getElementById('pause-button').style.display = 'block';
             } else {
                 document.getElementById('start-button').style.display = 'block';
             }
