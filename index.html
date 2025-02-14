@@ -88,6 +88,19 @@
             font-size: 4em; /* larger size for the center button */
             display: none;
         }
+        #mobile-message {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            font-size: 1.5em;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 7;
+        }
         #prompt {
             position: absolute;
             bottom: 10px;
@@ -122,6 +135,7 @@
         <button id="pause-button" onclick="togglePause()">⏸️</button>
         <button id="start-button" onclick="startVideo()">▶️</button>
         <button id="large-play-button" onclick="startVideo()">▶️</button>
+        <div id="mobile-message">Press Play Below</div>
         <div id="prompt" style="display: none;">
         </div>
     </div>
@@ -172,6 +186,7 @@
                 document.getElementById('pause-button').style.display = 'block';
             } else {
                 document.getElementById('large-play-button').style.display = 'block';
+                document.getElementById('mobile-message').style.display = 'block';
             }
             positionButtons();
         }
@@ -187,6 +202,7 @@
                 document.getElementById('pause-button').innerText = '⏸️';
                 document.getElementById('pause-button').style.display = 'block';
                 document.getElementById('large-play-button').style.display = 'none';
+                document.getElementById('mobile-message').style.display = 'none';
                 videoStarted = true;
             }
         }
@@ -207,6 +223,7 @@
             videoStarted = true;
             document.getElementById('start-button').style.display = 'none';
             document.getElementById('large-play-button').style.display = 'none';
+            document.getElementById('mobile-message').style.display = 'none';
             document.getElementById('pause-button').style.display = 'block';
         }
 
@@ -215,6 +232,7 @@
             const pauseButton = document.getElementById('pause-button');
             const startButton = document.getElementById('start-button');
             const largePlayButton = document.getElementById('large-play-button');
+            const mobileMessage = document.getElementById('mobile-message');
 
             const playerRect = playerElement.getBoundingClientRect();
             const gap = 20; // distance from the bottom and left sides
@@ -227,6 +245,9 @@
 
             largePlayButton.style.left = `${playerRect.left + (playerRect.width / 2) - (largePlayButton.clientWidth / 2)}px`;
             largePlayButton.style.top = `${playerRect.top + (playerRect.height / 2) - (largePlayButton.clientHeight / 2)}px`;
+
+            mobileMessage.style.left = `${playerRect.left + (playerRect.width / 2) - (mobileMessage.clientWidth / 2)}px`;
+            mobileMessage.style.top = `${playerRect.top + (playerRect.height / 2) - (mobileMessage.clientHeight / 2)}px`;
         }
 
         window.addEventListener('resize', positionButtons);
@@ -238,6 +259,7 @@
                         player.unMute();
                         videoStarted = true;
                         document.getElementById('large-play-button').style.display = 'none';
+                        document.getElementById('mobile-message').style.display = 'none';
                         document.getElementById('pause-button').style.display = 'block';
                     }
                 });
