@@ -129,8 +129,8 @@
         <div id="player"></div>
         <div id="overlay-permanent"></div>
         <div id="overlay-paused"></div>
-        <button id="pause-button" onclick="togglePause()">Pause</button>
-        <button id="start-button" onclick="startVideo()">Play Video</button>
+        <button id="pause-button" onclick="togglePause()">⏸️</button>
+        <button id="start-button" onclick="startVideo()">▶️</button>
         <div id="prompt" style="display: none;">
         </div>
     </div>
@@ -188,10 +188,10 @@
                 window.location.href = "https://forms.office.com/r/75jdBjwfDw";
             } else if (event.data == YT.PlayerState.PAUSED && videoStarted) {
                 document.getElementById('overlay-paused').style.display = 'block';
-                document.getElementById('pause-button').innerText = 'Play';
+                document.getElementById('pause-button').innerText = '▶️';
             } else if (event.data == YT.PlayerState.PLAYING) {
                 document.getElementById('overlay-paused').style.display = 'none';
-                document.getElementById('pause-button').innerText = 'Pause';
+                document.getElementById('pause-button').innerText = '⏸️';
                 videoStarted = true;
             }
         }
