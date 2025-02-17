@@ -17,13 +17,24 @@
             background: #000000;
             overflow: hidden;
         }
-        #background {
+        #background, #overlay-permanent, #overlay-paused {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+        }
+        #background {
             z-index: 1;
+        }
+        #overlay-permanent {
+            background: transparent;
+            z-index: 4;
+        }
+        #overlay-paused {
+            display: none;
+            background: transparent;
+            z-index: 5;
         }
         #content {
             position: relative;
@@ -43,49 +54,29 @@
             max-width: 100%;
             max-height: 100%;
             border: none;
-            position: relative;
             z-index: 3;
-        }
-        #overlay-permanent {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: transparent;
-            z-index: 4;
-        }
-        #overlay-paused {
-            display: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: transparent;
-            z-index: 5;
         }
         #pause-button,
         #start-button,
         #large-play-button {
             position: absolute;
             background: none;
-            color: red; /* Changed to red color */
+            color: red;
             border: none;
             cursor: pointer;
             font-weight: bold;
-            text-shadow: 0 0 2px #ff0000; /* red border around the symbols */
+            text-shadow: 0 0 2px #ff0000;
             z-index: 6;
         }
         #pause-button,
         #start-button {
-            font-size: 2em; /* twice the size */
+            font-size: 2em;
         }
         #start-button {
             display: none;
         }
         #large-play-button {
-            font-size: 4em; /* larger size for the center button */
+            font-size: 4em;
             display: none;
         }
         #mobile-message {
@@ -99,7 +90,7 @@
             background: rgba(0, 0, 0, 0.7);
             padding: 10px;
             border-radius: 5px;
-            z-index: 7; /* Ensure this is on top of all overlays */
+            z-index: 7;
         }
         #prompt {
             position: absolute;
@@ -109,13 +100,13 @@
             padding: 10px;
             border-radius: 5px;
             z-index: 3;
+            display: none; /* Moved from inline style */
         }
         #open-in-chrome {
             color: #4285f4;
             text-decoration: underline;
             cursor: pointer;
         }
-        /* Additional CSS to hide YouTube button and overlays */
         .ytp-chrome-top-buttons,
         .ytp-chrome-bottom,
         .ytp-show-cards-title,
@@ -136,12 +127,15 @@
         <button id="start-button" onclick="startVideo()">▶️</button>
         <button id="large-play-button" onclick="startVideo()">▶️</button>
         <div id="mobile-message">Press Play Below</div>
-        <div id="prompt" style="display: none;">
+        <div id="prompt">
             <p>For the best experience, please <span id="open-in-chrome">open this page in Google Chrome</span> or add this page to your home screen.</p>
         </div>
     </div>
 
     <script>
+        const ICON_PLAY = '▶️';
+        const ICON_PAUSE = '⏸️';
+
         const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
         if (isIOS && window.navigator.standalone === false) {
             document.getElementById('prompt').style.display = 'block';
@@ -162,7 +156,7 @@
 
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
-                videoId: 'AaayAuLZkmk', // Your video ID
+                videoId: 'AaayAuLZkmk',
                 playerVars: {
                     'autoplay': 1,
                     'controls': 0,
@@ -170,8 +164,8 @@
                     'fs': 1,
                     'modestbranding': 1,
                     'rel': 0,
-                    'iv_load_policy': 3, // Disable annotations
-                    'playsinline': 1 // Ensure video plays inline on mobile devices
+                    'iv_load_policy': 3,
+                    'playsinline': 1
                 },
                 events: {
                     'onReady': onPlayerReady,
@@ -194,14 +188,14 @@
         }
 
         function onPlayerStateChange(event) {
-            if (event.data == YT.PlayerState.ENDED) {
+            if (event.data === YT.PlayerState.ENDED) {
                 window.location.href = "https://forms.office.com/r/75jdBjwfDw";
-            } else if (event.data == YT.PlayerState.PAUSED && videoStarted) {
+            } else if (event.data === YT.PlayerState.PAUSED && videoStarted) {
                 document.getElementById('overlay-paused').style.display = 'block';
-                document.getElementById('pause-button').innerText = '▶️';
-            } else if (event.data == YT.PlayerState.PLAYING) {
+                document.getElementById('pause-button').innerText = ICON_PLAY;
+            } else if (event.data === YT.PlayerState.PLAYING) {
                 document.getElementById('overlay-paused').style.display = 'none';
-                document.getElementById('pause-button').innerText = '⏸️';
+                document.getElementById('pause-button').innerText = ICON_PAUSE;
                 document.getElementById('pause-button').style.display = 'block';
                 document.getElementById('large-play-button').style.display = 'none';
                 document.getElementById('mobile-message').style.display = 'none';
@@ -212,11 +206,11 @@
         function togglePause() {
             if (player.getPlayerState() === YT.PlayerState.PLAYING) {
                 player.pauseVideo();
-                document.getElementById('pause-button').innerText = '▶️';
             } else {
                 player.playVideo();
-                document.getElementById('pause-button').innerText = '⏸️';
             }
+            document.getElementById('pause-button').innerText = 
+                player.getPlayerState() === YT.PlayerState.PLAYING ? ICON_PAUSE : ICON_PLAY;
         }
 
         function startVideo() {
