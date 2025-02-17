@@ -69,17 +69,19 @@
         #start-button,
         #large-play-button {
             position: absolute;
-            background: none;
-            color: #ff0000;
+            background: red; /* Changed background color to red */
+            color: white; /* Symbols remain white */
             border: none;
             cursor: pointer;
             font-weight: bold;
-            text-shadow: 0 0 2px #ff0000;
-            z-index: 6;
-        }
-        #pause-button,
-        #start-button {
+            border-radius: 50%; /* Make buttons round */
+            width: 60px; /* Button width */
+            height: 60px; /* Button height */
+            display: flex;
+            justify-content: center;
+            align-items: center;
             font-size: 2em; /* twice the size */
+            z-index: 6;
         }
         #start-button {
             display: none;
